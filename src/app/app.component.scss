@@ -8,7 +8,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-
 .content {
   display: flex;
   margin: 82px auto 32px;
@@ -16,7 +15,6 @@
   max-width: 960px;
   flex-direction: column;
   align-items: center;
-  height: 77vh;
 }
 
 .example-form {
@@ -31,4 +29,21 @@
 
 td {
   padding-right: 8px;
+}
+
+.titulo {
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 35px;
+}
+
+.texto-chave {
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 30px;
+  margin-bottom: 25px;
+}
+
+.texto-valor {
+  font-weight: normal;
 }

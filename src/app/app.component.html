@@ -3,74 +3,157 @@
     <app-toolbar></app-toolbar>
 
     <div class="content">
-      <h2>Pesquisar planos de saúde disponiveis</h2>
-      <mat-spinner *ngIf="estados.length === 0 && loading == true"></mat-spinner>
-      <mat-form-field appearance="outline">
-        <mat-label>Estado</mat-label>
-        <mat-select [(ngModel)]="estadoEscolhido">
-          <mat-option *ngFor="let estado of estados" [value]="estado.sigla" (click)="getCidades();">
-            {{estado.nome}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-spinner *ngIf="estados.length > 0 && cidades.length === 0 && loading == true"></mat-spinner>
-      <mat-form-field appearance="outline" *ngIf="cidades.length > 0">
-        <mat-label>Cidade</mat-label>
-        <mat-select [(ngModel)]="cidadeEscolhida">
-          <mat-option *ngFor="let cidade of cidades" [value]="cidade.nome" (click)="getProfissao();">
-            {{cidade.nome}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-spinner *ngIf="cidades.length > 0 && profissoes.length === 0 && loading == true"></mat-spinner>
-      <mat-form-field appearance="outline" *ngIf="profissoes.length > 0">
-        <mat-label>Profissão</mat-label>
-        <mat-select [(ngModel)]="profissaoEscolhida">
-          <mat-option *ngFor="let profissao of profissoes" [value]="profissao.profissao" (click)="getEntidade();">
-            {{profissao.profissao}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-spinner *ngIf="profissoes.length > 0 && entidades.length === 0 && loading == true"></mat-spinner>
-      <mat-form-field appearance="outline" *ngIf="entidades.length > 0">
-        <mat-label>Entidades</mat-label>
-        <mat-select [(ngModel)]="entidadeEscolhida">
-          <mat-option *ngFor="let entidade of entidades" [value]="entidade.NomeFantasia" (click)="endRequest = true;">
-            {{entidade.RazaoSocial}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="outline" *ngIf="endRequest === true">
-        <mat-label>Data de nascimento</mat-label>
-        <input matInput [matDatepicker]="picker" [(ngModel)]="dataNascimento">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-      <button mat-raised-button color="primary" (click)="postPlanos();"
-        *ngIf="endRequest === true && dataNascimento !== ''">
-        Pesquisar
-      </button>
+      <div style="display: flex; flex-direction: column; align-items: center;" *ngIf="planos.length == 0">
+        <h2>Pesquisar planos de saúde disponiveis</h2>
+        <mat-spinner *ngIf="estados.length === 0 && loading == true"></mat-spinner>
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select [(ngModel)]="estadoEscolhido">
+            <mat-option *ngFor="let estado of estados" [value]="estado.sigla" (click)="getCidades();">
+              {{estado.nome}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-spinner *ngIf="estados.length > 0 && cidades.length == 0 && loading == true"></mat-spinner>
+        <mat-form-field appearance="outline" *ngIf="cidades.length > 0">
+          <mat-label>Cidade</mat-label>
+          <mat-select [(ngModel)]="cidadeEscolhida">
+            <mat-option *ngFor="let cidade of cidades" [value]="cidade.nome" (click)="getProfissao();">
+              {{cidade.nome}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-spinner *ngIf="cidades.length > 0 && profissoes.length === 0 && loading == true"></mat-spinner>
+        <mat-form-field appearance="outline" *ngIf="profissoes.length > 0">
+          <mat-label>Profissão</mat-label>
+          <mat-select [(ngModel)]="profissaoEscolhida">
+            <mat-option *ngFor="let profissao of profissoes" [value]="profissao.profissao" (click)="getEntidade();">
+              {{profissao.profissao}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-spinner *ngIf="profissoes.length > 0 && entidades.length === 0 && loading == true"></mat-spinner>
+        <mat-form-field appearance="outline" *ngIf="entidades.length > 0">
+          <mat-label>Entidades</mat-label>
+          <mat-select [(ngModel)]="entidadeEscolhida">
+            <mat-option *ngFor="let entidade of entidades" [value]="entidade.NomeFantasia" (click)="endRequest = true;">
+              {{entidade.RazaoSocial}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" *ngIf="endRequest === true">
+          <mat-label>Data de nascimento</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="dataNascimento">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <button mat-raised-button style="margin-bottom: 20px;" color="primary" (click)="postPlanos();"
+          *ngIf="endRequest === true && dataNascimento !== ''" [disabled]="loading">
+          Pesquisar
+        </button>
+      </div>
 
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            1 of 3
+      <mat-spinner *ngIf="endRequest === true && dataNascimento !== '' && loading == true"></mat-spinner>
+      <div style="width: 100%;"
+        *ngIf="endRequest === true && dataNascimento !== '' && loading == false && planos.length > 0">
+        <button mat-raised-button style="margin-bottom: 20px;" color="primary" (click)="pesquisarNovamente();"
+          *ngIf="endRequest === true && dataNascimento !== '' && loading == false && planos.length > 0"
+          [disabled]="loading">
+          Pesquisar Novamente
+        </button>
+        <p class="titulo">Planos</p>
+        <div class="row" *ngFor="let plano of planos; let i = index">
+          <p class="titulo col-xl-12">Plano {{ i + 1 }}</p>
+          <div class="col-xl-4">
+            <div class="card-body">
+              <p class="texto-chave">id: <span class="texto-valor">{{ plano.id }}</span></p>
+              <p class="texto-chave">abrangencia: <span class="texto-valor">{{ plano.abrangencia }}</span></p>
+              <p class="texto-chave">codigo_ans: <span class="texto-valor">{{ plano.codigo_ans }}</span></p>
+              <p class="texto-chave">coparticipacao: <span class="texto-valor">{{ plano.coparticipacao }}</span></p>
+              <p class="texto-chave">eComercializado: <span class="texto-valor">{{ plano.eComercializado }}</span></p>
+              <p class="texto-chave">idProdutoFatura: <span class="texto-valor">{{ plano.idProdutoFatura }}</span></p>
+              <p class="texto-chave">idProdutoFaturaSemDesconto: <span class="texto-valor">{{
+                  plano.idProdutoFaturaSemDesconto }}</span></p>
+              <p class="texto-chave">idRegraPreco: <span class="texto-valor">{{ plano.idRegraPreco }}</span></p>
+              <p class="texto-chave">idplano_sinf: <span class="texto-valor">{{ plano.idplano_sinf }}</span></p>
+              <p class="texto-chave">inicioVigenciaRegraPreco: <span class="texto-valor">{{
+                  plano.inicioVigenciaRegraPreco }}</span></p>
+            </div>
           </div>
-          <div class="col-6">
-            <div class="card" style="width: 18rem;">
-              <img src="..." class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+          <div class="col-xl-4">
+            <div class="card-body">
+              <p class="texto-chave">nivel: <span class="texto-valor">{{ plano.nivel }}</span></p>
+              <p class="texto-chave">nome_plano_ans: <span class="texto-valor">{{ plano.nome_plano_ans }}</span></p>
+              <p class="texto-chave">operadora: <span class="texto-valor">{{ plano.operadora }}</span></p>
+              <p class="texto-chave">operadoraOrdem: <span class="texto-valor">{{ plano.operadoraOrdem }}</span></p>
+              <p class="texto-chave">plano: <span class="texto-valor">{{ plano.plano }}</span></p>
+              <p class="texto-chave">possuiPlanoOriginal: <span class="texto-valor">{{ plano.possuiPlanoOriginal
+                  }}</span></p>
+              <p class="texto-chave">reembolso: <span class="texto-valor">{{ plano.reembolso }}</span></p>
+              <p class="texto-chave">segmentacao: <span class="texto-valor">{{ plano.segmentacao }}</span></p>
+              <p class="texto-chave">tipo_acomodacao: <span class="texto-valor">{{ plano.tipo_acomodacao }}</span></p>
+              <p class="texto-chave">valoresPlanoOriginal: <span class="texto-valor">{{ plano.valoresPlanoOriginal
+                  }}</span></p>
+            </div>
+          </div>
+          <div class="col-xl-4">
+            <div class="card-body">
+              <p class="titulo">Total Rede Referencia</p>
+              <p class="texto-chave">Hospital: <span class="texto-valor">{{ plano.total_rede_referencia.Hospital
+                  }}</span></p>
+              <!-- <p class="texto-chave">Laboratório: <span class="texto-valor">{{ plano.total_rede_referencia.Laboratório
+                  }}</span></p> -->
+              <p class="texto-chave">Maternidade: <span class="texto-valor">{{ plano.total_rede_referencia.Maternidade
+                  }}</span></p>
+              <!-- <p class="texto-chave">Pronto Socorro: <span class="texto-valor">{{ plano.total_rede_referencia.Pronto
+                  Socorro }}</span></p> -->
+              <p class="texto-chave">Total: <span class="texto-valor">{{ plano.total_rede_referencia.Total }}</span></p>
+            </div>
+          </div>
+          <div class="col-xl-4">
+            <div class="card-body">
+              <p class="titulo">Preços</p>
+              <div *ngFor="let preco of plano.precos.precos">
+                <p class="texto-chave">idade: <span class="texto-valor">{{ preco.idade }}</span></p>
+                <p class="texto-chave">de: <span class="texto-valor">{{ preco.de }}</span></p>
+                <p class="texto-chave">ate: <span class="texto-valor">{{ preco.ate }}</span></p>
+                <p class="texto-chave">preco: <span class="texto-valor">{{ preco.preco }}</span></p>
+              </div>
+              <p class="texto-chave">total: <span class="texto-valor">{{ plano.precos.total }}</span></p>
+              <p class="texto-chave">totalSemDesconto: <span class="texto-valor">{{ plano.precos.totalSemDesconto
+                  }}</span></p>
+            </div>
+            <div class="card-body">
+              <p class="titulo">operadoraLogo</p>
+              <img [src]="plano.operadoraLogo" alt="operadoraLogo" srcset="">
+            </div>
+          </div>
+          <div class="col-xl-4" *ngFor="let redeReferencia of plano.rede_referencia; let i = index">
+            <div class="card-body">
+              <p class="titulo">Rede Referencia {{ i + 1 }}</p>
+              <p class="texto-chave">id: <span class="texto-valor">{{ redeReferencia.id }}</span></p>
+              <p class="texto-chave">Top: <span class="texto-valor">{{ redeReferencia.Top }}</span></p>
+              <p class="texto-chave">Prestador: <span class="texto-valor">{{ redeReferencia.Prestador }}</span></p>
+              <p class="texto-chave">TipoPrestador: <span class="texto-valor">{{ redeReferencia.TipoPrestador
+                  }}</span></p>
+              <p class="texto-chave">CEP: <span class="texto-valor">{{ redeReferencia.CEP }}</span></p>
+              <p class="texto-chave">Endereco: <span class="texto-valor">{{ redeReferencia.Endereco }}</span></p>
+              <p class="texto-chave">Bairro: <span class="texto-valor">{{ redeReferencia.Bairro }}</span></p>
+              <p class="texto-chave">Cidade: <span class="texto-valor">{{ redeReferencia.Cidade }}</span></p>
+              <p class="texto-chave">Estado: <span class="texto-valor">{{ redeReferencia.Estado }}</span></p>
+              <div *ngFor="let TipoAtendimento of redeReferencia.TipoAtendimento">
+                <p class="texto-chave">TipoAtendimento</p>
+                <div>
+                  <p class="texto-chave"> <span class="texto-valor">{{ TipoAtendimento }}</span></p>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col">
-            3 of 3
-          </div>
         </div>
+      </div>
+      <div>
+        &nbsp;
       </div>
     </div>
     <router-outlet></router-outlet>
-</div>
+  </div>

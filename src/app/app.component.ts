@@ -5,9 +5,9 @@ import { AppApi } from './app.api';
 import { ThemeService } from './core/services/theme.service';
 
 @Component({
-  selector:'app-root',
-  templateUrl:'./app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   isDarkTheme!: Observable<boolean>;
@@ -28,17 +28,17 @@ export class AppComponent implements OnInit {
   constructor(
     private themeService: ThemeService,
     private _snackBar: MatSnackBar
-    ) { }
+  ) {}
 
-    async ngOnInit() {
-      await AppApi.pesquisarEstados()
-        .then(async (res: any) => {
-          this.loading = false;
-          this.estados = res.data;
-        })
-        .catch((err) => {
-          this.loading = false;
-        });
+  async ngOnInit() {
+    await AppApi.pesquisarEstados()
+      .then(async (res: any) => {
+        this.loading = false;
+        this.estados = res.data;
+      })
+      .catch((err) => {
+        this.loading = false;
+      });
     this.isDarkTheme = this.themeService.isDarkTheme;
   }
 
@@ -100,8 +100,8 @@ export class AppComponent implements OnInit {
     };
     await AppApi.pesquisarPlanos(dados)
       .then(async (res: any) => {
+        this.planos = res.data.planos;
         this.loading = false;
-        console.log(res.data);
       })
       .catch((err) => {
         this.loading = false;
@@ -115,5 +115,18 @@ export class AppComponent implements OnInit {
     this._snackBar.open(message, action, config);
   }
 
+  pesquisarNovamente(){
+    this.estados = [];
+    this.estadoEscolhido = '';
+    this.cidades = [];
+    this.cidadeEscolhida = '';
+    this.profissoes = [];
+    this.profissaoEscolhida = '';
+    this.entidades = [];
+    this.entidadeEscolhida = '';
+    this.planos = [];
+    this.planoEscolhido = '';
+    this.endRequest = false;
+    this.dataNascimento = '';
+  }
 }
-
