@@ -1,0 +1,14 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row style="padding-left: 30px; padding-right: 30px;">
+    <h1>Bem vindo (a)!</h1>
+    <div class="spacer"></div>
+    <mat-slide-toggle [checked]="isDarkTheme | async" (change)="toggleDarkTheme($event.checked)">
+    <span *ngIf="tipoCor == 'dark_mode'" class="material-icons" >
+      dark_mode
+    </span>
+    <span *ngIf="tipoCor == 'brightness_low'" class="material-icons" >
+      brightness_low
+    </span>
+  </mat-slide-toggle>
+  </mat-toolbar-row>
+</mat-toolbar>

@@ -1,0 +1,55 @@
+<div [ngClass]="{'dark-theme': isDarkTheme | async}">
+  <div class="mat-app-background">
+    <app-toolbar></app-toolbar>
+
+    <div class="content">
+      <h2>Pesquisar planos de saúde disponiveis</h2>
+      <mat-spinner *ngIf="estados.length === 0 && loading == true"></mat-spinner>
+      <mat-form-field appearance="outline">
+        <mat-label>Estado</mat-label>
+        <mat-select [(ngModel)]="estadoEscolhido">
+          <mat-option *ngFor="let estado of estados" [value]="estado.sigla" (click)="getCidades();">
+            {{estado.nome}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-spinner *ngIf="estados.length > 0 && cidades.length === 0 && loading == true"></mat-spinner>
+      <mat-form-field appearance="outline" *ngIf="cidades.length > 0">
+        <mat-label>Cidade</mat-label>
+        <mat-select [(ngModel)]="cidadeEscolhida">
+          <mat-option *ngFor="let cidade of cidades" [value]="cidade.nome" (click)="getProfissao();">
+            {{cidade.nome}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-spinner *ngIf="cidades.length > 0 && profissoes.length === 0 && loading == true"></mat-spinner>
+      <mat-form-field appearance="outline" *ngIf="profissoes.length > 0">
+        <mat-label>Profissão</mat-label>
+        <mat-select [(ngModel)]="profissaoEscolhida">
+          <mat-option *ngFor="let profissao of profissoes" [value]="profissao.profissao" (click)="getEntidade();">
+            {{profissao.profissao}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-spinner *ngIf="profissoes.length > 0 && entidades.length === 0 && loading == true"></mat-spinner>
+      <mat-form-field appearance="outline" *ngIf="entidades.length > 0">
+        <mat-label>Entidades</mat-label>
+        <mat-select [(ngModel)]="entidadeEscolhida">
+          <mat-option *ngFor="let entidade of entidades" [value]="entidade.NomeFantasia" (click)="endRequest = true;">
+            {{entidade.RazaoSocial}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" *ngIf="endRequest === true">
+        <mat-label>Data de nascimento</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="dataNascimento">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="postPlanos();"
+        *ngIf="endRequest === true && dataNascimento !== ''">
+        Pesquisar
+      </button>
+    </div>
+    <router-outlet></router-outlet>
+</div>
