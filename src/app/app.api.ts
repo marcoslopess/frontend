@@ -30,7 +30,7 @@ export class AppApi {
   static async pesquisarProfissao(uf: any, cidade: any) {
     return await axios
       .get(
-        `https://lb-aws-1105894158.sa-east-1.elb.amazonaws.com/profissao/${uf}/${cidade}?api-key=ddd70c32-fc98-4618-b494-a9698f824353`
+        `http://lb-aws-1105894158.sa-east-1.elb.amazonaws.com/profissao/${uf}/${cidade}?api-key=ddd70c32-fc98-4618-b494-a9698f824353`
       )
       .catch(function (error) {
         console.log(error);
@@ -40,7 +40,7 @@ export class AppApi {
   static async pesquisarEntidade(profissao: any, uf: any, cidade: any) {
     return await axios
       .get(
-        `https://lb-aws-1105894158.sa-east-1.elb.amazonaws.com/entidade/${profissao}/${uf}/${cidade}?api-key=4b94dba2-5524-4632-939b-92df1c50a645`
+        `http://lb-aws-1105894158.sa-east-1.elb.amazonaws.com/entidade/${profissao}/${uf}/${cidade}?api-key=4b94dba2-5524-4632-939b-92df1c50a645`
       )
       .catch((error) => {
         console.log(error);
@@ -53,7 +53,7 @@ export class AppApi {
     };
     return await axios
       .post(
-        `https://lb-aws-1105894158.sa-east-1.elb.amazonaws.com/plano?api-key=261fd4d0-fd9f-468a-afa9-f5a89ed3701c`,
+        `http://lb-aws-1105894158.sa-east-1.elb.amazonaws.com/plano?api-key=261fd4d0-fd9f-468a-afa9-f5a89ed3701c`,
         dados
       )
       .catch((error) => {
